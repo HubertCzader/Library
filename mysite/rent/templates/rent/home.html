@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block content %}
+
+<html>
+<head>
+<style>
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+li {
+	float: left;
+}
+
+li a {
+	display: block;
+	padding: 8px;
+	background-color: #30d5c8;
+}
+</style>
+</head>
+<body>
+
+<ul>
+	<li><a href="{% url 'rent:home' %}">HOME</a></li>
+	<li><a href="{% url 'rent:cart' %}"> CART</a></li>
+	<li><a href="{% url 'rent:login' %}">LOGIN</a></li>
+	<li><a href="{% url 'rent:register' %}">REGISTER</a></li>
+	<li><a href="{% url 'rent:logout' %}">LOGOUT</a></li>
+</ul>
+
+</body>
+</html>
+
+
+
+<br>
+
+<div class="container">
+<div class="container row">
+	<div class="col-lg-10">
+		<h3>RENTALS:</h3>
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th><Title></Title></th>
+					<th>Address</th>
+                    <th></th>
+				</tr>
+                {% for rental in rentals %}
+		        <tr>
+					<td><b>{{rental.name}}</b> </td>
+                    <td>{{rental.get_address}} </td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'rent:rental' rental.id %}">Choose </a> </td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+
+
+</div>
+</div>
+
+{% endblock %}
+

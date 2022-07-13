@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block content %}
+
+<html>
+<head>
+<style>
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+li {
+	float: left;
+}
+
+li a {
+	display: block;
+	padding: 8px;
+	background-color: #30d5c8;
+}
+</style>
+</head>
+<body>
+
+<ul>
+	<li><a href="{% url 'rent:home' %}">HOME</a></li>
+	<li><a href="{% url 'rent:cart' %}"> CART</a></li>
+	<li><a href="{% url 'rent:login' %}">LOGIN</a></li>
+	<li><a href="{% url 'rent:register' %}">REGISTER</a></li>
+	<li><a href="{% url 'rent:logout' %}">LOGOUT</a></li>
+</ul>
+
+</body>
+</html>
+
+<br>
+
+<div class="container">
+<div class="container row">
+	<div class="col-lg-10">
+		<h3>BOOKS:</h3>
+		<div class="card card-body">
+			{% if books %}
+				<table class="table table-sm">
+					<tr>
+						<th> <Title></Title> </th>
+						<th> Author </th>
+						<th> Genre </th>
+						<th> Publishing house </th>
+						<th> Availability </th>
+						<th></th>
+					</tr>
+					{% for book in books %}
+					<tr>
+						<td><b>{{book.title}}</b> </td>
+						<td>{{book.author}} </td>
+						<td>{{book.book_genre}} </td>
+						<td>{{book.publishing_house}}</td>
+						<td>{{book.check_availability}}</td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'rent:book_to_cart' book.id %}">Rent </a> </td>
+					</tr>
+					{% endfor %}
+				</table>
+			{% else %}
+				<p>No books are available.</p>
+			{% endif %}
+		</div>
+        <h3>FILMS:</h3>
+		<div class="card card-body">
+			{% if films %}
+				<table class="table table-sm">
+					<tr>
+						<th> <Title></Title> </th>
+						<th> Director </th>
+						<th> Genre </th>
+						<th> Availability </th>
+						<th></th>
+					</tr>
+					{% for film in films %}
+					<tr>
+						<td><b>{{film.title}}</b> </td>
+						<td>{{film.director}} </td>
+						<td>{{film.film_genre}} </td>
+						<td>{{film.check_availability}}</td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'rent:film_to_cart' film.id %}">Rent </a> </td>
+					</tr>
+					{% endfor %}
+				</table>
+			{% else %}
+    			<p>No films are available.</p>
+			{% endif %}
+		</div>
+        <h3>CDs:</h3>
+		<div class="card card-body">
+			{% if cds %}
+				<table class="table table-sm">
+					<tr>
+						<th> <Title></Title> </th>
+						<th> Author </th>
+						<th> Genre </th>
+						<th> Availability </th>
+						<th></th>
+					</tr>
+					{% for cd in cds %}
+					<tr>
+						<td><b>{{cd.title}}</b> </td>
+						<td>{{cd.director}} </td>
+						<td>{{cd.music_genre}} </td>
+						<td>{{cd.check_availability}}</td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'rent:cd_to_cart' cd.id %}">Rent </a> </td>
+					</tr>
+					{% endfor %}
+				</table>
+			{% else %}
+				<p> No CDs are available. </p>
+			{% endif %}
+		</div>
+
+
+	</div>
+
+
+</div>
+</div>
+
+{% endblock %}
