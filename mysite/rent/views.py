@@ -4,13 +4,20 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from .forms import CreateUserForm, CreateCustomerForm
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+from django.views import generic
 
 
-# Create your views here.
-def home(request):
-    rentals = Rental.objects.all()
-    context = {'rentals': rentals}
-    return render(request, 'rent/home.html', context)
+
+class HomeView(generic.ListView):
+    template_name = 'rent/home.html'
+    context_object_name = 'rentals'
+
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Rental.objects.all()
 
 
 def rental(request, rental_id):
@@ -22,11 +29,11 @@ def rental(request, rental_id):
     return render(request, 'rent/rental.html', context)
 
 
-def cart(request):
-    if request.user.is_authenticated:
-        return render(request, 'rent/cart.html')
-    else:
-        return redirect('/rent')
+# def cart(request):
+#     if request.user.is_authenticated:
+#         return render(request, 'rent/cart.html')
+#     else:
+#         return redirect('/rent')
 
 
 def login_page(request):
@@ -41,8 +48,7 @@ def login_page(request):
                 print("working")
                 login(request, user)
                 return redirect('/rent')
-        context = {}
-        return render(request, 'rent/login.html', context)
+        return render(request, 'rent/login.html')
 
 
 def logout_page(request):
@@ -73,35 +79,53 @@ def register_page(request):
 
 
 # def cart(request):
+#     if request.user.is_authenticated:
+#         car = Customer.objects.all()
+#         return render(request, 'rent/cart.html', {'cart': car})
+#     else:
+#         return redirect('/rent')
+
+
+def cart(request):
+    cust = Customer.objects.filter(user=request.user)
+    for c in cust:
+        carts = Cart.objects.all()
+        for car in carts:
+            if car.customer == c:
+                context = {
+                    'cart': cart
+                }
+                return render(request, 'rent/cart.html', context)
+
+#
+# def book_to_cart(request, book_id):
+#     book = Book.objects.get(id=book_id)
 #     cust = Customer.objects.filter(user=request.user)
+#     Book.date_of_loan = timezone.now()
+#
 #     for c in cust:
 #         carts = Cart.objects.all()
+#         req_cart = ''
 #         for car in carts:
 #             if car.customer == c:
-#                 context = {
-#                     'cart': cart
-#                 }
-#                 return render(request, 'rent/cart.html', context)
+#                 req_cart = car
+#                 break
+#         if req_cart == '':
+#             req_cart = Cart.objects.create(
+#                 customer=c,
+#             )
+#         req_cart.books.add(book)
+#     return redirect('/rent/cart')
 
 
 def book_to_cart(request, book_id):
-    book = Book.objects.get(id=book_id)
-    cust = Customer.objects.filter(user=request.user)
-    Book.date_of_loan = timezone.now()
-
-    for c in cust:
-        carts = Cart.objects.all()
-        req_cart = ''
-        for car in carts:
-            if car.customer == c:
-                req_cart = car
-                break
-        if req_cart == '':
-            req_cart = Cart.objects.create(
-                customer=c,
-            )
-        req_cart.books.add(book)
-    return redirect('/rent/cart')
+    if request.user.is_authenticated():
+        book = get_object_or_404(Book, pk=book_id)
+        cart, created = Cart.objects.get_or_create(user=request.user, active=True)
+        cart.add_to_cart(book_id)
+        return redirect('/rent/cart')
+    else:
+        return redirect('/rent')
 
 
 def film_to_cart(request, film_id):

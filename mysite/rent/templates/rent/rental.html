@@ -50,7 +50,6 @@ li a {
 						<th> Author </th>
 						<th> Genre </th>
 						<th> Publishing house </th>
-						<th> Availability </th>
 						<th></th>
 					</tr>
 					{% for book in books %}
@@ -59,7 +58,6 @@ li a {
 						<td>{{book.author}} </td>
 						<td>{{book.book_genre}} </td>
 						<td>{{book.publishing_house}}</td>
-						<td>{{book.check_availability}}</td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'rent:book_to_cart' book.id %}">Rent </a> </td>
 					</tr>
 					{% endfor %}
@@ -76,15 +74,13 @@ li a {
 						<th> <Title></Title> </th>
 						<th> Director </th>
 						<th> Genre </th>
-						<th> Availability </th>
 						<th></th>
 					</tr>
 					{% for film in films %}
 					<tr>
 						<td><b>{{film.title}}</b> </td>
-						<td>{{film.director}} </td>
+						<td>{{film.author}} </td>
 						<td>{{film.film_genre}} </td>
-						<td>{{film.check_availability}}</td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'rent:film_to_cart' film.id %}">Rent </a> </td>
 					</tr>
 					{% endfor %}
@@ -101,15 +97,13 @@ li a {
 						<th> <Title></Title> </th>
 						<th> Author </th>
 						<th> Genre </th>
-						<th> Availability </th>
 						<th></th>
 					</tr>
 					{% for cd in cds %}
 					<tr>
 						<td><b>{{cd.title}}</b> </td>
-						<td>{{cd.director}} </td>
+						<td>{{cd.author}} </td>
 						<td>{{cd.music_genre}} </td>
-						<td>{{cd.check_availability}}</td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'rent:cd_to_cart' cd.id %}">Rent </a> </td>
 					</tr>
 					{% endfor %}
